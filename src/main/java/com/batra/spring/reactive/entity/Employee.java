@@ -2,6 +2,8 @@ package com.batra.spring.reactive.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,8 +17,11 @@ public class Employee {
 	private Long id;
 	@Column
 	private String name;
-	@Column private String email;
-	@Column private Department department;
+	@Column
+	private String email;
+	@Column
+	@Enumerated(EnumType.STRING)
+	private Department department;
 
 	public Employee() {
 	}
