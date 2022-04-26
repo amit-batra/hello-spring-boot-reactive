@@ -18,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @SpringBootTest
 @Transactional
 public class EmployeeServiceUnitTests {
-	private EmployeeService employeeService;
-	private Iterable<Employee> testEmployees;
+	private final EmployeeService employeeService;
+	private final Iterable<Employee> testEmployees;
 	private long numberOfTestEmployees;
 
 	@Autowired
@@ -31,7 +31,6 @@ public class EmployeeServiceUnitTests {
 
 	@Test
 	public void testGetAllEmployees() {
-
 		Iterable<Employee> allEmployees = employeeService.getAllEmployees();
 		assertNotNull(allEmployees);
 		allEmployees.forEach(employee -> {
@@ -69,7 +68,6 @@ public class EmployeeServiceUnitTests {
 
 	@Test
 	void testAddEmployee() {
-
 		Employee newEmployee = new Employee("Jim Doe", "jim.doe@springboot.com", Department.SALES);
 		Employee savedEmployee = employeeService.saveEmployee(newEmployee);
 		assertAll(
