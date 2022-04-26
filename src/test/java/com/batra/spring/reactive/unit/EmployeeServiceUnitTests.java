@@ -3,13 +3,11 @@ package com.batra.spring.reactive.unit;
 import com.batra.spring.reactive.entity.Department;
 import com.batra.spring.reactive.entity.Employee;
 import com.batra.spring.reactive.service.EmployeeService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
+import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,24 +16,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
+@Transactional
 public class EmployeeServiceUnitTests {
-	@Autowired
 	private EmployeeService employeeService;
+	private Iterable<Employee> testEmployees;
+	private long numberOfTestEmployees;
 
-	private List<Employee> testEmployees = List.of(
-		new Employee("John Doe", "john.doe@springboot.com", Department.HR),
-		new Employee("Jane Doe", "jane.doe@springboot.com", Department.IT),
-		new Employee("Jack Doe", "jack.doe@springboot.com", Department.FINANCE)
-	);
-
-	@BeforeEach
-	public void setUp() {
-		testEmployees.forEach(employeeService::saveEmployee);
-	}
-
-	@AfterEach
-	public void tearDown() {
-		employeeService.deleteAllEmployees();
+	@Autowired
+	public EmployeeServiceUnitTests(EmployeeService employeeService) {
+		this.employeeService = employeeService;
+		this.testEmployees = employeeService.getAllEmployees();
+		this.testEmployees.forEach(employee -> numberOfTestEmployees++);
 	}
 
 	@Test
@@ -73,7 +64,7 @@ public class EmployeeServiceUnitTests {
 	@Test
 	void testGetEmployeeCount() {
 		long count = employeeService.getEmployeeCount();
-		assertEquals(testEmployees.size(), count);
+		assertEquals(numberOfTestEmployees, count);
 	}
 
 	@Test
