@@ -68,4 +68,26 @@ public class Employee {
 				.add("department=" + department)
 				.toString();
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Employee)) return false;
+
+		Employee employee = (Employee) o;
+
+		if (id != null ? !id.equals(employee.id) : employee.id != null) return false;
+		if (name != null ? !name.equals(employee.name) : employee.name != null) return false;
+		if (email != null ? !email.equals(employee.email) : employee.email != null) return false;
+		return department == employee.department;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (email != null ? email.hashCode() : 0);
+		result = 31 * result + (department != null ? department.hashCode() : 0);
+		return result;
+	}
 }

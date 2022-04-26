@@ -9,6 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,5 +36,17 @@ public class EmployeeServiceIntegrationTests {
 			() -> assertNotNull(this.webTestClient),
 			() -> assertNotNull(this.testEmployees)
 		);
+	}
+
+	@Test
+	void testGetAllEmployees() {
+		Iterable<Employee> allEmployees = this.webTestClient.get()
+			.uri("/employees")
+			.exchange()
+			.returnResult(Employee.class)
+			.getResponseBody()
+			.toIterable();
+
+		assertIterableEquals(testEmployees, allEmployees);
 	}
 }
