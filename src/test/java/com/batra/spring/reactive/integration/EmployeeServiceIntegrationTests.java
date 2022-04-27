@@ -25,9 +25,10 @@ public class EmployeeServiceIntegrationTests {
 		this.testEmployees = this.webTestClient.get()
 			.uri("/employees")
 			.exchange()
-			.returnResult(Employee.class)
-			.getResponseBody()
-			.toIterable();
+			.expectStatus().isOk()
+			.expectBodyList(Employee.class)
+			.returnResult()
+			.getResponseBody();
 	}
 
 	@Test
@@ -43,9 +44,10 @@ public class EmployeeServiceIntegrationTests {
 		Iterable<Employee> allEmployees = this.webTestClient.get()
 			.uri("/employees")
 			.exchange()
-			.returnResult(Employee.class)
-			.getResponseBody()
-			.toIterable();
+			.expectStatus().isOk()
+			.expectBodyList(Employee.class)
+			.returnResult()
+			.getResponseBody();
 
 		assertIterableEquals(testEmployees, allEmployees);
 	}
