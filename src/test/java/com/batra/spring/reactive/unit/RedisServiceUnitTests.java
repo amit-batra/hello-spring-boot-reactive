@@ -95,8 +95,8 @@ public class RedisServiceUnitTests {
 		// Validate that adding <key, value2> conditionally returns false
 		assertFalse(this.redisService.addIfKeyMissing(key, value2));
 
-		// Next validate that <key, value1> did not get overwritten in
-		// with <key, value2> the previous call
+		// Next validate that <key, value1> did not get overwritten with
+		// <key, value2> in the previous call
 		assertEquals(value1, this.redisService.getValueForKey(key));
 	}
 }
