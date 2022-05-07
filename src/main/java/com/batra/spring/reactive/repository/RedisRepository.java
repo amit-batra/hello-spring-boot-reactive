@@ -75,4 +75,26 @@ public class RedisRepository {
 			Objects.requireNonNull(this.template.keys("*"))
 		);
 	}
+
+	/**
+	 * Adds the specified value against the specified key only if the key is
+	 * absent in Redis. Else, leave the existing key-value intact.
+	 * @param key the key to be checked in Redis
+	 * @param value the value to be saved against the specified key
+	 * @return <code>true</code> if the specified value was saved in Redis,
+	 * <code>false</code> otherwise.
+	 */
+	public boolean addIfKeyMissing(final String key, final String value) {
+		return Boolean.TRUE.equals(this.valueOperations.setIfAbsent(key, value));
+	}
+
+	/**
+	 * Returns the value for the specified key (if exists).
+	 * @param key the key to be looked up in Redis
+	 * @return the value against the specified key (if found),
+	 * <code>null</code> otherwise.
+	 */
+	public String getValueForKey(final String key) {
+		return this.valueOperations.get(key);
+	}
 }

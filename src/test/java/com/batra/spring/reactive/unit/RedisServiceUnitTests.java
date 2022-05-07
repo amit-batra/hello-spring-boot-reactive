@@ -36,12 +36,12 @@ public class RedisServiceUnitTests {
 
 	@Test
 	public void testGetSetSimpleValue() {
-		final String inKey = "key1";
-		final String inValue = "value1";
+		final String key = "key1";
+		final String value = "value1";
 
-		boolean resultBefore = this.redisService.checkIfValueExists(inKey, inValue);
-		this.redisService.setValue(inKey, inValue);
-		boolean resultAfter = this.redisService.checkIfValueExists(inKey, inValue);
+		boolean resultBefore = this.redisService.checkIfValueExists(key, value);
+		this.redisService.setValue(key, value);
+		boolean resultAfter = this.redisService.checkIfValueExists(key, value);
 
 		assertAll(
 			() -> assertFalse(resultBefore, "Before check failed"),
@@ -66,5 +66,37 @@ public class RedisServiceUnitTests {
 			() -> assertFalse(result3, "Check on result3 failed"),
 			() -> assertEquals(value, valueOut, "Check on value failed")
 		);
+	}
+
+	@Test
+	public void testAddIfKeyMissingReturnsTrue() {
+		final String key = "key3";
+		final String value = "value3";
+
+		// First validate that the key is missing
+		assertFalse(this.redisService.checkIfValueExists(key, value));
+
+		// Now validate that the key/value got added
+		assertTrue(this.redisService.addIfKeyMissing(key, value));
+
+		// Now validate that key/value exist
+		assertTrue((this.redisService.checkIfValueExists(key, value)));
+	}
+
+	@Test
+	public void testAddIfKeyMissingReturnsFalse() {
+		final String key = "key4";
+		final String value1 = "value4.1";
+		final String value2 = "value4.2";
+
+		// First, insert <key, value1> in Redis
+		this.redisService.setValue(key, value1);
+
+		// Validate that adding <key, value2> conditionally returns false
+		assertFalse(this.redisService.addIfKeyMissing(key, value2));
+
+		// Next validate that <key, value1> did not get overwritten in
+		// with <key, value2> the previous call
+		assertEquals(value1, this.redisService.getValueForKey(key));
 	}
 }

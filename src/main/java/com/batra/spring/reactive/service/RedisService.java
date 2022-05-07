@@ -29,4 +29,12 @@ public class RedisService {
 	public void deleteAllValues() {
 		this.redisRepository.deleteAllValues();
 	}
+
+	public boolean addIfKeyMissing(final String key, final String value) {
+		return this.redisRepository.addIfKeyMissing(key, value);
+	}
+
+	public String getValueForKey(final String key) {
+		return this.redisRepository.getValueForKey(key);
+	}
 }
