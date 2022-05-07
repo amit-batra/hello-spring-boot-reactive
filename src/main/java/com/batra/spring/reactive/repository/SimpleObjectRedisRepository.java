@@ -24,4 +24,8 @@ public class SimpleObjectRedisRepository {
 	public Object getObject(final String key) {
 		return this.valueOperations.get(key);
 	}
+
+	public Object deleteObject(final String key) {
+		return this.valueOperations.getAndDelete(key);
+	}
 }

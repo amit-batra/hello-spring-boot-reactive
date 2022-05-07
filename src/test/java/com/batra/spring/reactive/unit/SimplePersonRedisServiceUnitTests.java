@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -26,7 +27,7 @@ public class SimplePersonRedisServiceUnitTests {
 
 	@Test
 	public void testSetPerson() {
-		final String key = "employee1";
+		final String key = "person1";
 		final Person value = new Person(
 			"Amit Batra",
 			100
@@ -34,5 +35,22 @@ public class SimplePersonRedisServiceUnitTests {
 
 		this.redisService.setPerson(key, value);
 		assertEquals(value, this.redisService.getPerson(key));
+	}
+
+	@Test
+	public void testDeletePerson() {
+		final String key = "person2";
+		final Person value = new Person(
+			"Rahul Batra",
+			20
+		);
+
+		this.redisService.setPerson(key, value);
+		Person deletedPerson = this.redisService.deletePerson(key);
+
+		assertAll(
+			() -> assertNotNull(deletedPerson),
+			() -> assertEquals(deletedPerson, value)
+		);
 	}
 }

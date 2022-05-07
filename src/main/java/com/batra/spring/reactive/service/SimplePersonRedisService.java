@@ -22,4 +22,8 @@ public class SimplePersonRedisService {
 	public Person getPerson(final String key) {
 		return (Person) this.redisRepository.getObject(key);
 	}
+
+	public Person deletePerson(final String key) {
+		return (Person) this.redisRepository.deleteObject(key);
+	}
 }
