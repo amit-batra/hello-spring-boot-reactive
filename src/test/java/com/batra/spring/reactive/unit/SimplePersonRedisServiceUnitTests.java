@@ -34,7 +34,12 @@ public class SimplePersonRedisServiceUnitTests {
 		);
 
 		this.redisService.setPerson(key, value);
-		assertEquals(value, this.redisService.getPerson(key));
+		final Person retrievedPerson = this.redisService.getPerson(key);
+
+		assertAll(
+			() -> assertNotNull(retrievedPerson),
+			() -> assertEquals(retrievedPerson, value)
+		);
 	}
 
 	@Test
