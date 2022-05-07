@@ -5,6 +5,8 @@ import com.batra.spring.reactive.repository.SimpleObjectRedisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+
 @Service
 public class SimplePersonRedisService {
 
@@ -25,5 +27,9 @@ public class SimplePersonRedisService {
 
 	public Person deletePerson(final String key) {
 		return (Person) this.redisRepository.deleteObject(key);
+	}
+
+	public void expirePerson(final String key, final Duration timeout) {
+		this.redisRepository.expireObject(key, timeout);
 	}
 }

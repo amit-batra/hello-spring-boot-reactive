@@ -5,6 +5,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 
+import java.time.Duration;
+
 @Repository
 public class SimpleObjectRedisRepository {
 
@@ -27,5 +29,9 @@ public class SimpleObjectRedisRepository {
 
 	public Object deleteObject(final String key) {
 		return this.valueOperations.getAndDelete(key);
+	}
+
+	public void expireObject(final String key, final Duration timeout) {
+		this.redisTemplate.expire(key, timeout);
 	}
 }
