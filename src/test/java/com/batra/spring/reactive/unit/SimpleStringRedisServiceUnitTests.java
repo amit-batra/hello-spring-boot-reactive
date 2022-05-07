@@ -1,12 +1,10 @@
 package com.batra.spring.reactive.unit;
 
-import com.batra.spring.reactive.service.RedisService;
+import com.batra.spring.reactive.service.SimpleStringRedisService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,12 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class RedisServiceUnitTests {
+public class SimpleStringRedisServiceUnitTests {
 
-	private final RedisService redisService;
+	private final SimpleStringRedisService redisService;
 
 	@Autowired
-	public RedisServiceUnitTests(RedisService redisService) {
+	public SimpleStringRedisServiceUnitTests(SimpleStringRedisService redisService) {
 		this.redisService = redisService;
 	}
 
@@ -31,7 +29,7 @@ public class RedisServiceUnitTests {
 
 	@Test
 	public void validateAutoWiringWorked() {
-		assertNotNull(this.redisService, "RedisService was not Autowired");
+		assertNotNull(this.redisService, "SimpleStringRedisService was not Autowired");
 	}
 
 	@Test
@@ -98,5 +96,16 @@ public class RedisServiceUnitTests {
 		// Next validate that <key, value1> did not get overwritten with
 		// <key, value2> in the previous call
 		assertEquals(value1, this.redisService.getValueForKey(key));
+	}
+
+	@Test
+	public void testIncrementValue() {
+		final String key = "key5";
+		final String value = "1";
+
+		this.redisService.setValue(key, value);
+		Long incrementedValue = this.redisService.incrementValue(key);
+
+		assertEquals(2, incrementedValue);
 	}
 }

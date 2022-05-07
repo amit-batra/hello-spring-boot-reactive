@@ -1,16 +1,16 @@
 package com.batra.spring.reactive.service;
 
-import com.batra.spring.reactive.repository.RedisRepository;
+import com.batra.spring.reactive.repository.SimpleStringRedisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RedisService {
+public class SimpleStringRedisService {
 
-	private final RedisRepository redisRepository;
+	private final SimpleStringRedisRepository redisRepository;
 
 	@Autowired
-	public RedisService(RedisRepository redisRepository) {
+	public SimpleStringRedisService(SimpleStringRedisRepository redisRepository) {
 		this.redisRepository = redisRepository;
 	}
 
@@ -36,5 +36,9 @@ public class RedisService {
 
 	public String getValueForKey(final String key) {
 		return this.redisRepository.getValueForKey(key);
+	}
+
+	public Long incrementValue(final String key) {
+		return this.redisRepository.incrementValue(key);
 	}
 }

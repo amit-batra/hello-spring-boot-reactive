@@ -17,7 +17,7 @@ import java.util.Objects;
  * </ul>
  */
 @Repository
-public class RedisRepository {
+public class SimpleStringRedisRepository {
 
 	private final StringRedisTemplate template;
 	private final ValueOperations<String, String> valueOperations;
@@ -30,7 +30,7 @@ public class RedisRepository {
 	 *                 operations on Redis.
 	 */
 	@Autowired
-	public RedisRepository(final StringRedisTemplate template) {
+	public SimpleStringRedisRepository(final StringRedisTemplate template) {
 		this.template = template;
 		this.valueOperations = template.opsForValue();
 	}
@@ -96,5 +96,9 @@ public class RedisRepository {
 	 */
 	public String getValueForKey(final String key) {
 		return this.valueOperations.get(key);
+	}
+
+	public Long incrementValue(final String key) {
+		return this.valueOperations.increment(key);
 	}
 }
