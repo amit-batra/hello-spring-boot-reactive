@@ -14,13 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-public class EmployeeServiceIntegrationTests {
+public class EmployeeControllerIntegrationTests {
 
 	private final WebTestClient webTestClient;
 	private final Iterable<Employee> testEmployees;
 
 	@Autowired
-	public EmployeeServiceIntegrationTests(WebTestClient webTestClient) {
+	public EmployeeControllerIntegrationTests(WebTestClient webTestClient) {
 		this.webTestClient = webTestClient;
 		this.testEmployees = this.webTestClient.get()
 			.uri("/employees")

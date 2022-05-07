@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.batra.spring</groupId>
-	<artifactId>hello-reactive</artifactId>
+	<artifactId>hello-reactive-spring-boot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>hello-spring-reactive</name>
-	<description>Demo project for Spring Boot Reactive</description>
+	<name>hello-reactive-spring-boot</name>
+	<description>Demo project for Reactive Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -24,6 +24,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
