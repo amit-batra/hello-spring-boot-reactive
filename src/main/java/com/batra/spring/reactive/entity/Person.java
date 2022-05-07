@@ -1,8 +1,9 @@
 package com.batra.spring.reactive.entity;
 
+import java.io.Serializable;
 import java.util.StringJoiner;
 
-public class Person {
+public class Person implements Serializable {
 
 	private String name;
 	private int age;
