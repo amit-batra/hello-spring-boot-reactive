@@ -6,12 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 public class ListStringRedisServiceUnitTests {
@@ -61,5 +62,60 @@ public class ListStringRedisServiceUnitTests {
 		final String nonExistingListKey = "nonExistingListKey";
 		List<String> listFromRedis = this.service.getList(nonExistingListKey);
 		assertEquals(0, listFromRedis.size());
+	}
+
+	@Test
+	public void testAddValueToLeft() {
+		final String leftmostElement = "zero";
+		final List<String> expectedList = new LinkedList<>();
+		expectedList.add(leftmostElement);
+		expectedList.addAll(STRING_LIST);
+
+		this.service.addValueToLeft(LIST_KEY, leftmostElement);
+		final List<String> listFromRedis = this.service.getList(LIST_KEY);
+
+		assertEquals(expectedList, listFromRedis, "Lists don't match");
+	}
+
+	@Test
+	public void testAddValueToRight() {
+		final String rightmostElement = "four";
+		final List<String> expectedList = new LinkedList<>(STRING_LIST);
+		expectedList.add(rightmostElement);
+
+		this.service.addValueToRight(LIST_KEY, rightmostElement);
+		final List<String> listFromRedis = this.service.getList(LIST_KEY);
+
+		assertEquals(expectedList, listFromRedis, "Lists don't match");
+	}
+
+	@Test
+	public void testRemoveValueFromLeft() {
+		final List<String> expectedList = new LinkedList<>(STRING_LIST);
+		final String expectedElement = expectedList.remove(0);
+
+		final String valueFromLeft = this.service.removeValueFromLeft(LIST_KEY);
+		final List<String> listFromRedis = this.service.getList(LIST_KEY);
+
+		assertAll(
+			() -> assertEquals(expectedElement, valueFromLeft),
+			() -> assertEquals(expectedList.size(), listFromRedis.size()),
+			() -> assertEquals(expectedList, listFromRedis)
+		);
+	}
+
+	@Test
+	public void testRemoveValueFromRight() {
+		final List<String> expectedList = new ArrayList<>(STRING_LIST);
+		final String expectedElement = expectedList.remove(expectedList.size() - 1);
+
+		final String valueFromRight = this.service.removeValueFromRight(LIST_KEY);
+		final List<String> listFromRedis = this.service.getList(LIST_KEY);
+
+		assertAll(
+			() -> assertEquals(expectedElement, valueFromRight),
+			() -> assertEquals(expectedList.size(), listFromRedis.size()),
+			() -> assertEquals(expectedList, listFromRedis)
+		);
 	}
 }
