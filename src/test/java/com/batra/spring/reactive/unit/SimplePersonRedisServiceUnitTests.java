@@ -43,7 +43,7 @@ public class SimplePersonRedisServiceUnitTests {
 
 		assertAll(
 			() -> assertNotNull(retrievedPerson),
-			() -> assertEquals(retrievedPerson, value)
+			() -> assertEquals(value, retrievedPerson)
 		);
 	}
 
@@ -60,7 +60,7 @@ public class SimplePersonRedisServiceUnitTests {
 
 		assertAll(
 			() -> assertNotNull(deletedPerson),
-			() -> assertEquals(deletedPerson, value)
+			() -> assertEquals(value, deletedPerson)
 		);
 	}
 
@@ -88,7 +88,7 @@ public class SimplePersonRedisServiceUnitTests {
 			}).get();
 
 			assertAll(
-				() -> assertEquals(beforeExpiry, value),
+				() -> assertEquals(value, beforeExpiry),
 				() -> assertNull(afterExpiry)
 			);
 		} catch (InterruptedException | ExecutionException e) {
