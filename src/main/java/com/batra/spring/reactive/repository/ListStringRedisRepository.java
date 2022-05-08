@@ -25,8 +25,9 @@ public class ListStringRedisRepository {
 
 	public List<String> getList(final String key) {
 		Long size = this.listOperations.size(key);
-		if (size == null)
+		if (size == null) {
 			return null;
+		}
 		return this.listOperations.range(key, 0L, size - 1L);
 	}
 

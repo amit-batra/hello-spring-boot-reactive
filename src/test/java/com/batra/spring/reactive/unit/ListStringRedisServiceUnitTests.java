@@ -37,9 +37,9 @@ public class ListStringRedisServiceUnitTests {
 	@BeforeEach
 	public void setup() {
 		this.service.clearList(LIST_KEY);
-		STRING_LIST.forEach(
-			value -> this.service.addValueToRight(LIST_KEY, value)
-		);
+		STRING_LIST.forEach(value -> {
+			this.service.addValueToRight(LIST_KEY, value);
+		});
 	}
 
 	@Test
