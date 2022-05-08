@@ -1,41 +1,57 @@
 package com.batra.spring.reactive.unit;
 
+import com.batra.spring.reactive.service.ListPersonRedisService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class ListPersonRedisServiceUnitTest {
 
+	private final ListPersonRedisService service;
+
+	@Autowired
+	public ListPersonRedisServiceUnitTest(final ListPersonRedisService service) {
+		this.service = service;
+	}
+
 	@BeforeEach
-	void setUp() {
+	public void setUp() {
 	}
 
 	@Test
-	void testClearList() {
+	public void testAutowiringSuccessful() {
+		assertNotNull(this.service);
 	}
 
 	@Test
-	void testSize() {
+	public void testClearList() {
 	}
 
 	@Test
-	void testGetList() {
+	public void testSize() {
 	}
 
 	@Test
-	void testAddPersonToLeft() {
+	public void testGetList() {
 	}
 
 	@Test
-	void testAddPersonToRight() {
+	public void testAddPersonToLeft() {
 	}
 
 	@Test
-	void testRemovePersonFromLeft() {
+	public void testAddPersonToRight() {
 	}
 
 	@Test
-	void testRemovePersonFromRight() {
+	public void testRemovePersonFromLeft() {
+	}
+
+	@Test
+	public void testRemovePersonFromRight() {
 	}
 }
