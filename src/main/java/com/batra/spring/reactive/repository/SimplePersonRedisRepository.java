@@ -1,5 +1,6 @@
 package com.batra.spring.reactive.repository;
 
+import com.batra.spring.reactive.entity.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -8,30 +9,30 @@ import org.springframework.stereotype.Repository;
 import java.time.Duration;
 
 @Repository
-public class SimpleObjectRedisRepository {
+public class SimplePersonRedisRepository {
 
-	private final RedisTemplate<String, Object> redisTemplate;
-	private final ValueOperations<String, Object> valueOperations;
+	private final RedisTemplate<String, Person> redisTemplate;
+	private final ValueOperations<String, Person> valueOperations;
 
 	@Autowired
-	public SimpleObjectRedisRepository(final RedisTemplate<String, Object> redisTemplate) {
+	public SimplePersonRedisRepository(final RedisTemplate<String, Person> redisTemplate) {
 		this.redisTemplate = redisTemplate;
 		this.valueOperations = this.redisTemplate.opsForValue();
 	}
 
-	public void setObject(final String key, final Object value) {
+	public void setPerson(final String key, final Person value) {
 		this.valueOperations.set(key, value);
 	}
 
-	public Object getObject(final String key) {
+	public Person getPerson(final String key) {
 		return this.valueOperations.get(key);
 	}
 
-	public Object deleteObject(final String key) {
+	public Person deletePerson(final String key) {
 		return this.valueOperations.getAndDelete(key);
 	}
 
-	public void expireObject(final String key, final Duration timeout) {
+	public void expirePerson(final String key, final Duration timeout) {
 		this.redisTemplate.expire(key, timeout);
 	}
 }

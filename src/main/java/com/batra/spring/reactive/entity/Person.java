@@ -1,9 +1,8 @@
 package com.batra.spring.reactive.entity;
 
-import java.io.Serializable;
 import java.util.StringJoiner;
 
-public class Person implements Serializable {
+public class Person {
 
 	private String name;
 	private int age;
@@ -22,6 +21,10 @@ public class Person implements Serializable {
 
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+	public Person() {
+		this(null, 0);
 	}
 
 	public Person(String name, int age) {

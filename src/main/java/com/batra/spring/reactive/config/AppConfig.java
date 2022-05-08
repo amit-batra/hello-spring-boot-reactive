@@ -1,11 +1,15 @@
 package com.batra.spring.reactive.config;
 
+import com.batra.spring.reactive.entity.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class AppConfig {
@@ -19,6 +23,11 @@ public class AppConfig {
 		return new LettuceConnectionFactory();
 	}
 
+	@Bean
+	public RedisSerializer<Person> personJsonSerializer() {
+		return new Jackson2JsonRedisSerializer<>(Person.class);
+	}
+
 	/**
 	 * Creates an instance of <code>RedisTemplate</code> to operate with Redis
 	 * values containing Java objects.
@@ -29,9 +38,13 @@ public class AppConfig {
 	 */
 	@Bean
 	@Autowired
-	public RedisTemplate<String, Object> redisTemplate(final RedisConnectionFactory connectionFactory) {
-		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+	public RedisTemplate<String, Person> redisTemplate(final RedisConnectionFactory connectionFactory, final RedisSerializer<Person> personRedisSerializer) {
+		RedisTemplate<String, Person> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(connectionFactory);
+		redisTemplate.setKeySerializer(StringRedisSerializer.UTF_8);
+		redisTemplate.setHashKeySerializer(StringRedisSerializer.UTF_8);
+		redisTemplate.setValueSerializer(personRedisSerializer);
+		redisTemplate.setHashValueSerializer(personRedisSerializer);
 		return redisTemplate;
 	}
 }
