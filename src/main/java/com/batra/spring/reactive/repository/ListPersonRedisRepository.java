@@ -58,4 +58,52 @@ public class ListPersonRedisRepository {
 		}
 		return this.listOperations.range(key, 0,  size - 1);
 	}
+
+	/**
+	 * Adds the specified <code>Person</code> object to the left of a
+	 * Redis list with the given key.
+	 * @param key the key referring to the Redis list to which the
+	 *            specified <code>Person</code> object will be added.
+	 * @param person the <code>Person</code> object to be added to the
+	 *               specified Redis list.
+	 */
+	public void addPersonToLeft(final String key, final Person person) {
+		this.listOperations.leftPush(key, person);
+	}
+
+	/**
+	 * Adds the specified <code>Person</code> object to the right of a
+	 * Redis list with the given key.
+	 * @param key the key referring to the Redis list to which the
+	 *            specified <code>Person</code> object will be added.
+	 * @param person the <code>Person</code> object to be added to the
+	 *               specified Redis list.
+	 */
+	public void addPersonToRight(final String key, final Person person) {
+		this.listOperations.rightPush(key, person);
+	}
+
+	/**
+	 * Removes a <code>Person</code> object from the left of a
+	 * Redis list with the given key.
+	 * @param key the key referring to the Redis list from which the
+	 *            specified <code>Person</code> object will be removed.
+	 * @return the <code>Person</code> object that was removed from the
+	 * specified Redis list.
+	 */
+	public Person removePersonFromLeft(final String key) {
+		return this.listOperations.leftPop(key);
+	}
+
+	/**
+	 * Removes a <code>Person</code> object from the right of a
+	 * Redis list with the given key.
+	 * @param key the key referring to the Redis list from which the
+	 *            specified <code>Person</code> object will be removed.
+	 * @return the <code>Person</code> object that was removed from the
+	 * specified Redis list.
+	 */
+	public Person removePersonFromRight(final String key) {
+		return this.listOperations.rightPop(key);
+	}
 }
