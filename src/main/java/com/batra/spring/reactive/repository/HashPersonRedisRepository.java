@@ -36,7 +36,7 @@ public class HashPersonRedisRepository {
 	 * otherwise.
 	 */
 	public Boolean containsPerson(final String key, final String hashKey) {
-		return false;
+		return this.hashOperations.hasKey(key, hashKey);
 	}
 
 	/**
@@ -49,15 +49,35 @@ public class HashPersonRedisRepository {
 	 *               added to the Redis hash
 	 */
 	public void addPerson(final String key, final String hashKey, final Person person) {
-
+		this.hashOperations.put(key, hashKey, person);
 	}
 
+	/**
+	 * Given a hash key, retrieves a <code>Person</code> object from the
+	 * specified Redis hash.
+	 * @param key the Redis key of the hash that needs to be searched
+	 * @param hashKey the key of the <code>Person</code> object that
+	 *                needs to be retrieved
+	 * @return the <code>Person</code> object corresponding to the
+	 * specified hash key in Redis (if found), else <code>null</code>
+	 */
 	public Person getPerson(final String key, final String hashKey) {
-		return null;
+		return this.hashOperations.get(key, hashKey);
 	}
 
-	public Person deletePerson(final String key, final String hashKey) {
-		return null;
+	/**
+	 * Given a hash key, deletes a <code>Person</code> object from the
+	 * specified Redis hash.
+	 * @param key the Redis key of the hash that needs to be searched
+	 * @param hashKey the key of the <code>Person</code> object that
+	 *                needs to be deleted
+	 * @return the <code>true</code> if the <code>Person</code> object
+	 * corresponding to the specified hash key in Redis was deleted,
+	 * else <code>false</code>
+	 */
+	public Boolean deletePerson(final String key, final String hashKey) {
+		final Long count = this.hashOperations.delete(key, hashKey);
+		return count.longValue() == 1 ? Boolean.TRUE : Boolean.FALSE;
 	}
 
 	public List<Person> getPeople(final String key) {
