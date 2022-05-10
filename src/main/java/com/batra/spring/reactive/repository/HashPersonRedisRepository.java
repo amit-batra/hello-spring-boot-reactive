@@ -59,7 +59,7 @@ public class HashPersonRedisRepository {
 	 * @param hashKey the key of the <code>Person</code> object that
 	 *                needs to be retrieved
 	 * @return the <code>Person</code> object corresponding to the
-	 * specified hash key in Redis (if found), else <code>null</code>
+	 * specified hash key in Redis (if found), else <code>null</code>.
 	 */
 	public Person getPerson(final String key, final String hashKey) {
 		return this.hashOperations.get(key, hashKey);
@@ -73,18 +73,32 @@ public class HashPersonRedisRepository {
 	 *                needs to be deleted
 	 * @return the <code>true</code> if the <code>Person</code> object
 	 * corresponding to the specified hash key in Redis was deleted,
-	 * else <code>false</code>
+	 * else <code>false</code>.
 	 */
 	public Boolean deletePerson(final String key, final String hashKey) {
 		final Long count = this.hashOperations.delete(key, hashKey);
 		return count.longValue() == 1 ? Boolean.TRUE : Boolean.FALSE;
 	}
 
+	/**
+	 * Returns a <code>List</code> of all <code>Person</code> objects
+	 * stored in the specified Redis hash.
+	 * @param key the key that the Redis hash is bound to
+	 * @return a <code>List</code> of <code>Person</code> objects that
+	 * were found in the specified Redis hash.
+	 */
 	public List<Person> getPeople(final String key) {
-		return null;
+		return this.hashOperations.values(key);
 	}
 
+	/**
+	 * Returns the count of all <code>Person</code> objects
+	 * stored in the specified Redis hash.
+	 * @param key the key that the Redis hash is bound to
+	 * @return the count of all <code>Person</code> objects in
+	 * the specified Redis hash.
+	 */
 	public Long size(final String key) {
-		return null;
+		return this.hashOperations.size(key);
 	}
 }
