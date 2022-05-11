@@ -10,10 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Unit tests for the {@link com.batra.spring.reactive.service.HashPersonRedisService}
- * class.
+ * Unit tests for the {@link HashPersonRedisService} class.
  */
 @SpringBootTest
 public class HashPersonRedisServiceUnitTests {
@@ -32,6 +32,10 @@ public class HashPersonRedisServiceUnitTests {
 		this.service = service;
 	}
 
+	/**
+	 * Executed before each test case. Re-initializes the Redis hash with the
+	 * Java <code>Map</code>.
+	 */
 	@BeforeEach
 	public void setup() {
 		this.service.clear(MAP_REDIS_KEY);
@@ -40,8 +44,24 @@ public class HashPersonRedisServiceUnitTests {
 		);
 	}
 
+	/**
+	 * Validates that the Spring Boot auto-wiring was able to successfully
+	 * inject the {@link HashPersonRedisService} instance.
+	 */
 	@Test
 	public void testAutowiringSuccessful() {
 		assertNotNull(this.service);
+	}
+
+	/**
+	 * Validates the <code>containsPerson</code> method in class
+	 * {@link HashPersonRedisService}. It does that by checking for the
+	 * existence of all keys (from the Java map) in the Redis hash.
+	 */
+	@Test
+	public void testContainsPerson() {
+		PERSON_MAP.keySet().forEach(key ->
+			assertTrue(this.service.containsPerson(MAP_REDIS_KEY, key))
+		);
 	}
 }
