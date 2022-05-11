@@ -44,6 +44,14 @@ public class SetPersonRedisRepository {
 		return this.setOperations.intersect(key, otherKey);
 	}
 
+	/**
+	 * Performs a union of two Redis sets and returns the resulting
+	 * set without storing it in Redis.
+	 * @param key the key referring to the first Redis set
+	 * @param otherKey the key referring to the second Redis set
+	 * @return a {@link Set} resulting from the union of the two
+	 * Redis sets.
+	 */
 	public Set<Person> union(final String key, final String otherKey) {
 		return this.setOperations.union(key, otherKey);
 	}
@@ -52,7 +60,7 @@ public class SetPersonRedisRepository {
 	 * Retrieves the {@link Person} objects in the specified Redis set.
 	 * @param key the key referring to a Redis set
 	 * @return a {@link Set} of {@link Person} objects in the specified
-	 * Redis set
+	 * Redis set.
 	 */
 	public Set<Person> getPeople(final String key) {
 		return this.setOperations.members(key);
