@@ -130,6 +130,7 @@ public class HashPersonRedisServiceUnitTests {
 		final int afterSize = afterList.size();
 
 		assertAll(
+			() -> assertTrue(deleteSuccess),
 			() -> assertEquals(beforeSize - 1, afterSize),
 			() -> assertTrue(beforeList.contains(removedPerson)),
 			() -> assertFalse(afterList.contains(removedPerson))
