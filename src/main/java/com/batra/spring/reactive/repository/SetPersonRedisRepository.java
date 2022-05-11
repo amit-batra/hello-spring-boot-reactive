@@ -19,34 +19,42 @@ public class SetPersonRedisRepository {
 	}
 
 	public boolean add(final String key, final Person person) {
-		return true;
+		final Long nItemsAdded = this.setOperations.add(key, person);
+		return nItemsAdded > 0 ? true : false;
 	}
 
 	public boolean remove(final String key, final Person person) {
-		return true;
+		final Long nItemsRemoved = this.setOperations.remove(key, person);
+		return nItemsRemoved > 0 ? true : false;
 	}
 
 	public boolean isMember(final String key, final Person person) {
-		return false;
+		return this.setOperations.isMember(key, person);
 	}
 
 	public Long size(final String key) {
-		return null;
+		return this.setOperations.size(key);
 	}
 
-	public Set<Person> difference(final String key, final Set<Person> other) {
-		return null;
+	public Set<Person> difference(final String key, final String otherKey) {
+		return this.setOperations.difference(key, otherKey);
 	}
 
-	public Set<Person> intersection(final String key, final Set<Person> other) {
-		return null;
+	public Set<Person> intersection(final String key, final String otherKey) {
+		return this.setOperations.intersect(key, otherKey);
 	}
 
-	public Set<Person> union(final String key, final Set<Person> other) {
-		return null;
+	public Set<Person> union(final String key, final String otherKey) {
+		return this.setOperations.union(key, otherKey);
 	}
 
+	/**
+	 * Retrieves the {@link Person} objects in the specified Redis set.
+	 * @param key the key referring to a Redis set
+	 * @return a {@link Set} of {@link Person} objects in the specified
+	 * Redis set
+	 */
 	public Set<Person> getPeople(final String key) {
-		return null;
+		return this.setOperations.members(key);
 	}
 }
