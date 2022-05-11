@@ -33,7 +33,7 @@ public class HashPersonRedisService {
 	 * specified key was found in the specified Redis hash, <code>false</code>
 	 * otherwise.
 	 */
-	public Boolean containsPerson(String key, String hashKey) {
+	public Boolean containsPerson(final String key, final String hashKey) {
 		return this.repository.containsPerson(key, hashKey);
 	}
 
@@ -47,7 +47,7 @@ public class HashPersonRedisService {
 	 * @param person  the <code>Person</code> object that will be
 	 *                added to the Redis hash
 	 */
-	public void addPerson(String key, String hashKey, Person person) {
+	public void addPerson(final String key, final String hashKey, final Person person) {
 		repository.addPerson(key, hashKey, person);
 	}
 
@@ -61,7 +61,7 @@ public class HashPersonRedisService {
 	 * @return the <code>Person</code> object corresponding to the
 	 * specified hash key in Redis (if found), else <code>null</code>.
 	 */
-	public Person getPerson(String key, String hashKey) {
+	public Person getPerson(final String key, final String hashKey) {
 		return this.repository.getPerson(key, hashKey);
 	}
 
@@ -76,7 +76,7 @@ public class HashPersonRedisService {
 	 * corresponding to the specified hash key in Redis was deleted,
 	 * else <code>false</code>.
 	 */
-	public Boolean deletePerson(String key, String hashKey) {
+	public Boolean deletePerson(final String key, final String hashKey) {
 		return this.repository.deletePerson(key, hashKey);
 	}
 
@@ -88,7 +88,7 @@ public class HashPersonRedisService {
 	 * @return a <code>List</code> of <code>Person</code> objects that
 	 * were found in the specified Redis hash.
 	 */
-	public List<Person> getPeople(String key) {
+	public List<Person> getPeople(final String key) {
 		return this.repository.getPeople(key);
 	}
 
@@ -100,7 +100,16 @@ public class HashPersonRedisService {
 	 * @return the count of all <code>Person</code> objects in
 	 * the specified Redis hash.
 	 */
-	public Long size(String key) {
+	public Long size(final String key) {
 		return this.repository.size(key);
+	}
+
+	/**
+	 * Clears the Redis hash with the specified key.
+	 *
+	 * @param key the key pointing to the Redis hash to be cleared
+	 */
+	public void clear(final String key) {
+		this.repository.clear(key);
 	}
 }

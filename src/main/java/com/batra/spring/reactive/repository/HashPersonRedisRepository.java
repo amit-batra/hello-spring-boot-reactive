@@ -101,4 +101,12 @@ public class HashPersonRedisRepository {
 	public Long size(final String key) {
 		return this.hashOperations.size(key);
 	}
+
+	/**
+	 * Clears the Redis hash with the specified key.
+	 * @param key the key pointing to the Redis hash to be cleared
+	 */
+	public void clear(final String key) {
+		this.redisTemplate.delete(key);
+	}
 }
