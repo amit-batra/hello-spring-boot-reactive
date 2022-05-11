@@ -156,4 +156,36 @@ public class HashPersonRedisServiceUnitTests {
 			() -> assertEquals(expectedList, actualList)
 		);
 	}
+
+	/**
+	 * Validates the <code>size</code> method in class
+	 * {@link HashPersonRedisService} by comparing its
+	 * return value against the size of the in-memory
+	 * Java map.
+	 */
+	public void testSize() {
+		final Long expectedSize = (long)PERSON_MAP.size();
+		final Long actualSize = this.service.size(REDIS_HASH_KEY);
+
+		assertEquals(expectedSize, actualSize);
+	}
+
+	/**
+	 * Validates the <code>clear</code> method in class
+	 * {@link HashPersonRedisService}.
+	 */
+	public void testClear() {
+		this.service.clear(REDIS_HASH_KEY);
+
+		final List<Person> expectedList = List.of();
+		final int expectedSize = expectedList.size();
+
+		final List<Person> actualList = this.service.getPeople(REDIS_HASH_KEY);
+		final int actualSize = actualList.size();
+
+		assertAll(
+			() -> assertEquals(expectedSize, actualSize),
+			() -> assertEquals(expectedList, actualList)
+		);
+	}
 }
