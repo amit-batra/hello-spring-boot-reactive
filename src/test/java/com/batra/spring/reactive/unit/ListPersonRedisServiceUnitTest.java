@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 class ListPersonRedisServiceUnitTest {
 
-	private static final String LIST_KEY = "peopleList";
+	private static final String REDIS_LIST_KEY = "peopleList";
 	private static final List<Person> LIST_PERSON = List.of(
 		new Person("Sumit Mohan", 25),
 		new Person("Mohit Mohan", 35),
@@ -33,9 +33,9 @@ class ListPersonRedisServiceUnitTest {
 
 	@BeforeEach
 	public void setUp() {
-		this.service.clearList(LIST_KEY);
+		this.service.clearList(REDIS_LIST_KEY);
 		LIST_PERSON.forEach(person ->
-			this.service.addPersonToRight(LIST_KEY, person)
+			this.service.addPersonToRight(REDIS_LIST_KEY, person)
 		);
 	}
 
@@ -46,10 +46,10 @@ class ListPersonRedisServiceUnitTest {
 
 	@Test
 	public void testClearList() {
-		this.service.clearList(LIST_KEY);
+		this.service.clearList(REDIS_LIST_KEY);
 
 		final List<Person> expectedList = List.of();
-		final List<Person> actualList = this.service.getList(LIST_KEY);
+		final List<Person> actualList = this.service.getList(REDIS_LIST_KEY);
 
 		assertEquals(expectedList, actualList);
 	}
@@ -57,7 +57,7 @@ class ListPersonRedisServiceUnitTest {
 	@Test
 	public void testSize() {
 		final long expectedSize = LIST_PERSON.size();
-		final long actualSize = this.service.size(LIST_KEY);
+		final long actualSize = this.service.size(REDIS_LIST_KEY);
 
 		assertEquals(expectedSize, actualSize);
 	}
@@ -65,7 +65,7 @@ class ListPersonRedisServiceUnitTest {
 	@Test
 	public void testGetList() {
 		final List<Person> expectedList = LIST_PERSON;
-		final List<Person> actualList = this.service.getList(LIST_KEY);
+		final List<Person> actualList = this.service.getList(REDIS_LIST_KEY);
 
 		assertEquals(expectedList, actualList);
 	}
@@ -73,25 +73,25 @@ class ListPersonRedisServiceUnitTest {
 	@Test
 	public void testAddPersonToLeft() {
 		final Person person = new Person("Kirit Mohan", 15);
-		this.service.addPersonToLeft(LIST_KEY, person);
+		this.service.addPersonToLeft(REDIS_LIST_KEY, person);
 
 		final List<Person> expectedList = new LinkedList<>();
 		expectedList.add(person);
 		expectedList.addAll(LIST_PERSON);
 
-		final List<Person> actualList = this.service.getList(LIST_KEY);
+		final List<Person> actualList = this.service.getList(REDIS_LIST_KEY);
 		assertEquals(expectedList, actualList);
 	}
 
 	@Test
 	public void testAddPersonToRight() {
 		final Person person = new Person("Bhagat Mohan", 55);
-		this.service.addPersonToRight(LIST_KEY, person);
+		this.service.addPersonToRight(REDIS_LIST_KEY, person);
 
 		final List<Person> expectedList = new LinkedList<>(LIST_PERSON);
 		expectedList.add(person);
 
-		final List<Person> actualList = this.service.getList(LIST_KEY);
+		final List<Person> actualList = this.service.getList(REDIS_LIST_KEY);
 		assertEquals(expectedList, actualList);
 	}
 
@@ -101,8 +101,8 @@ class ListPersonRedisServiceUnitTest {
 		final Long initialSize = Long.valueOf(LIST_PERSON.size());
 		final Person expectedPerson = LIST_PERSON.get(0);
 
-		final Person removedPerson = this.service.removePersonFromLeft(LIST_KEY);
-		final Long remainingSize = this.service.size(LIST_KEY);
+		final Person removedPerson = this.service.removePersonFromLeft(REDIS_LIST_KEY);
+		final Long remainingSize = this.service.size(REDIS_LIST_KEY);
 
 		assertAll(
 			() -> assertEquals(initialSize - 1, remainingSize),
@@ -116,8 +116,8 @@ class ListPersonRedisServiceUnitTest {
 		final Long initialSize = Long.valueOf(LIST_PERSON.size());
 		final Person expectedPerson = LIST_PERSON.get(LIST_PERSON.size() - 1);
 
-		final Person removedPerson = this.service.removePersonFromRight(LIST_KEY);
-		final Long remainingSize = this.service.size(LIST_KEY);
+		final Person removedPerson = this.service.removePersonFromRight(REDIS_LIST_KEY);
+		final Long remainingSize = this.service.size(REDIS_LIST_KEY);
 
 		assertAll(
 			() -> assertEquals(initialSize - 1, remainingSize),

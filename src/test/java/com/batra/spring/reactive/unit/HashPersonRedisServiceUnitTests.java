@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +25,12 @@ public class HashPersonRedisServiceUnitTests {
 
 	private final HashPersonRedisService service;
 
+	private static final String REDIS_HASH_KEY = "personMap";
 	private static final Map<String, Person> PERSON_MAP = Map.ofEntries(
 		Map.entry("amit", new Person("Amit Mohan", 25)),
 		Map.entry("sumit", new Person("Sumit Mohan", 35)),
 		Map.entry("namit", new Person("Namit Mohan", 45))
 	);
-	private static final String MAP_REDIS_KEY = "personMap";
 
 	@Autowired
 	public HashPersonRedisServiceUnitTests(final HashPersonRedisService service) {
@@ -42,9 +43,9 @@ public class HashPersonRedisServiceUnitTests {
 	 */
 	@BeforeEach
 	public void setup() {
-		this.service.clear(MAP_REDIS_KEY);
+		this.service.clear(REDIS_HASH_KEY);
 		PERSON_MAP.keySet().forEach(
-			key -> this.service.addPerson(MAP_REDIS_KEY, key, PERSON_MAP.get(key))
+			key -> this.service.addPerson(REDIS_HASH_KEY, key, PERSON_MAP.get(key))
 		);
 	}
 
@@ -65,7 +66,7 @@ public class HashPersonRedisServiceUnitTests {
 	@Test
 	public void testContainsPerson() {
 		PERSON_MAP.keySet().forEach(key ->
-			assertTrue(this.service.containsPerson(MAP_REDIS_KEY, key))
+			assertTrue(this.service.containsPerson(REDIS_HASH_KEY, key))
 		);
 	}
 
@@ -77,14 +78,14 @@ public class HashPersonRedisServiceUnitTests {
 	@Test
 	public void testAddPerson() {
 
-		final List<Person> beforeList = this.service.getPeople(MAP_REDIS_KEY);
+		final List<Person> beforeList = this.service.getPeople(REDIS_HASH_KEY);
 		final int beforeSize = beforeList.size();
 
 		final String personKey = "lalit";
 		final Person person = new Person("Lalit Mohan", 55);
-		this.service.addPerson(MAP_REDIS_KEY, personKey, person);
+		this.service.addPerson(REDIS_HASH_KEY, personKey, person);
 
-		final List<Person> afterList = this.service.getPeople(MAP_REDIS_KEY);
+		final List<Person> afterList = this.service.getPeople(REDIS_HASH_KEY);
 		final int afterSize = afterList.size();
 
 		assertAll(
@@ -105,28 +106,54 @@ public class HashPersonRedisServiceUnitTests {
 
 		final String personKey = "sumit";
 		final Person expectedPerson = PERSON_MAP.get(personKey);
-		final Person actualPerson = this.service.getPerson(MAP_REDIS_KEY, personKey);
+		final Person actualPerson = this.service.getPerson(REDIS_HASH_KEY, personKey);
 
 		assertEquals(expectedPerson, actualPerson);
 	}
 
+	/**
+	 * Validates the <code>deletePerson</code> method in class
+	 * {@link HashPersonRedisService}. It does that by comparing
+	 * the before and after state of the Redis hash.
+	 */
 	@Test
 	public void testDeletePerson() {
 
-		final List<Person> beforeList = this.service.getPeople(MAP_REDIS_KEY);
+		final List<Person> beforeList = this.service.getPeople(REDIS_HASH_KEY);
 		final int beforeSize = beforeList.size();
 
 		final String personKey = "sumit";
-		final Boolean deleteSuccess = this.service.deletePerson(MAP_REDIS_KEY, personKey);
+		final Boolean deleteSuccess = this.service.deletePerson(REDIS_HASH_KEY, personKey);
 		final Person removedPerson = PERSON_MAP.get(personKey);
 
-		final List<Person> afterList = this.service.getPeople(MAP_REDIS_KEY);
+		final List<Person> afterList = this.service.getPeople(REDIS_HASH_KEY);
 		final int afterSize = afterList.size();
 
 		assertAll(
 			() -> assertEquals(beforeSize - 1, afterSize),
 			() -> assertTrue(beforeList.contains(removedPerson)),
 			() -> assertFalse(afterList.contains(removedPerson))
+		);
+	}
+
+	/**
+	 * Validates the <code>getPeople</code> method in class
+	 * {@link HashPersonRedisService}. It does that by fetching the
+	 * contents of the Redis hash and comparing it against the
+	 * in-memory Java map.
+	 */
+	@Test
+	public void testGetPeople() {
+
+		final List<Person> expectedList = new ArrayList<>(PERSON_MAP.values());
+		final int expectedSize = expectedList.size();
+
+		final List<Person> actualList = this.service.getPeople(REDIS_HASH_KEY);
+		final int actualSize = actualList.size();
+
+		assertAll(
+			() -> assertEquals(expectedSize, actualSize),
+			() -> assertEquals(expectedList, actualList)
 		);
 	}
 }
