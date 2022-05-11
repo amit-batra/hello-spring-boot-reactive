@@ -13,6 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class ListPersonRedisServiceUnitTest {
@@ -46,12 +47,16 @@ class ListPersonRedisServiceUnitTest {
 
 	@Test
 	public void testClearList() {
-		this.service.clearList(REDIS_LIST_KEY);
+		final Boolean cleared = this.service.clearList(REDIS_LIST_KEY);
 
 		final List<Person> expectedList = List.of();
 		final List<Person> actualList = this.service.getList(REDIS_LIST_KEY);
 
-		assertEquals(expectedList, actualList);
+		assertAll(
+			() -> assertNotNull(cleared),
+			() -> assertTrue(cleared),
+			() -> assertEquals(expectedList, actualList)
+		);
 	}
 
 	@Test
@@ -64,10 +69,8 @@ class ListPersonRedisServiceUnitTest {
 
 	@Test
 	public void testGetList() {
-		final List<Person> expectedList = LIST_PERSON;
 		final List<Person> actualList = this.service.getList(REDIS_LIST_KEY);
-
-		assertEquals(expectedList, actualList);
+		assertEquals(LIST_PERSON, actualList);
 	}
 
 	@Test
@@ -98,13 +101,14 @@ class ListPersonRedisServiceUnitTest {
 	@Test
 	public void testRemovePersonFromLeft() {
 
-		final Long initialSize = Long.valueOf(LIST_PERSON.size());
+		final long initialSize = LIST_PERSON.size();
 		final Person expectedPerson = LIST_PERSON.get(0);
 
 		final Person removedPerson = this.service.removePersonFromLeft(REDIS_LIST_KEY);
 		final Long remainingSize = this.service.size(REDIS_LIST_KEY);
 
 		assertAll(
+			() -> assertNotNull(remainingSize),
 			() -> assertEquals(initialSize - 1, remainingSize),
 			() -> assertEquals(expectedPerson, removedPerson)
 		);
@@ -113,13 +117,14 @@ class ListPersonRedisServiceUnitTest {
 	@Test
 	public void testRemovePersonFromRight() {
 
-		final Long initialSize = Long.valueOf(LIST_PERSON.size());
+		final long initialSize = LIST_PERSON.size();
 		final Person expectedPerson = LIST_PERSON.get(LIST_PERSON.size() - 1);
 
 		final Person removedPerson = this.service.removePersonFromRight(REDIS_LIST_KEY);
 		final Long remainingSize = this.service.size(REDIS_LIST_KEY);
 
 		assertAll(
+			() -> assertNotNull(remainingSize),
 			() -> assertEquals(initialSize - 1, remainingSize),
 			() -> assertEquals(expectedPerson, removedPerson)
 		);

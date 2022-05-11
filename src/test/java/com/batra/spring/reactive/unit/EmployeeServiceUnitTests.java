@@ -19,14 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @Transactional
 public class EmployeeServiceUnitTests {
 	private final EmployeeService employeeService;
-	private final Iterable<Employee> testEmployees;
 	private long numberOfTestEmployees;
 
 	@Autowired
 	public EmployeeServiceUnitTests(EmployeeService employeeService) {
 		this.employeeService = employeeService;
-		this.testEmployees = employeeService.getAllEmployees();
-		this.testEmployees.forEach(employee -> numberOfTestEmployees++);
+		final Iterable<Employee> testEmployees = employeeService.getAllEmployees();
+		testEmployees.forEach(employee -> numberOfTestEmployees++);
 	}
 
 	@Test

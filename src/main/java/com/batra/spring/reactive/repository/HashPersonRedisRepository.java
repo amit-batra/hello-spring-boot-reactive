@@ -77,7 +77,7 @@ public class HashPersonRedisRepository {
 	 */
 	public Boolean deletePerson(final String key, final String hashKey) {
 		final Long count = this.hashOperations.delete(key, hashKey);
-		return count.longValue() == 1 ? Boolean.TRUE : Boolean.FALSE;
+		return count == 1L ? Boolean.TRUE : Boolean.FALSE;
 	}
 
 	/**
