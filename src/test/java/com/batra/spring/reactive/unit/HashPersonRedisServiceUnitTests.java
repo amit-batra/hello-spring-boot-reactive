@@ -78,14 +78,14 @@ public class HashPersonRedisServiceUnitTests {
 	public void testAddPerson() {
 
 		final List<Person> beforeList = this.service.getPeople(MAP_REDIS_KEY);
-		final Long beforeSize = (long) beforeList.size();
+		final int beforeSize = beforeList.size();
 
 		final String personKey = "lalit";
 		final Person person = new Person("Lalit Mohan", 55);
 		this.service.addPerson(MAP_REDIS_KEY, personKey, person);
 
 		final List<Person> afterList = this.service.getPeople(MAP_REDIS_KEY);
-		final Long afterSize = this.service.size(MAP_REDIS_KEY);
+		final int afterSize = afterList.size();
 
 		assertAll(
 			() -> assertEquals(beforeSize + 1, afterSize),
@@ -108,5 +108,25 @@ public class HashPersonRedisServiceUnitTests {
 		final Person actualPerson = this.service.getPerson(MAP_REDIS_KEY, personKey);
 
 		assertEquals(expectedPerson, actualPerson);
+	}
+
+	@Test
+	public void testDeletePerson() {
+
+		final List<Person> beforeList = this.service.getPeople(MAP_REDIS_KEY);
+		final int beforeSize = beforeList.size();
+
+		final String personKey = "sumit";
+		final Boolean deleteSuccess = this.service.deletePerson(MAP_REDIS_KEY, personKey);
+		final Person removedPerson = PERSON_MAP.get(personKey);
+
+		final List<Person> afterList = this.service.getPeople(MAP_REDIS_KEY);
+		final int afterSize = afterList.size();
+
+		assertAll(
+			() -> assertEquals(beforeSize - 1, afterSize),
+			() -> assertTrue(beforeList.contains(removedPerson)),
+			() -> assertFalse(afterList.contains(removedPerson))
+		);
 	}
 }
