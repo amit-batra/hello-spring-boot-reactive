@@ -93,4 +93,20 @@ public class HashPersonRedisServiceUnitTests {
 			() -> assertTrue(afterList.contains(person))
 		);
 	}
+
+	/**
+	 * Validates the <code>getPerson</code> method in class
+	 * {@link HashPersonRedisService}. It does that by fetching a
+	 * {@link Person} object from Redis has against the in-memory
+	 * Java map.
+	 */
+	@Test
+	public void testGetPerson() {
+
+		final String personKey = "sumit";
+		final Person expectedPerson = PERSON_MAP.get(personKey);
+		final Person actualPerson = this.service.getPerson(MAP_REDIS_KEY, personKey);
+
+		assertEquals(expectedPerson, actualPerson);
+	}
 }
