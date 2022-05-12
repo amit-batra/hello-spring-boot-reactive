@@ -28,19 +28,50 @@ public class SetPersonRedisRepository {
 		return (nItemsRemoved != null) && (nItemsRemoved > 0);
 	}
 
+	/**
+	 * Confirms whether a given {@link Person} object a member of the
+	 * specified Redis set.
+	 * @param key the key referring to a Redis set
+	 * @param person the {@link Person} object whose Set membership
+	 *               needs to be confirmed
+	 * @return <code>true</code> if the give {@link Person} object is
+	 * a member of the Redis set, <code>false</code> otherwise.
+	 */
 	public boolean isMember(final String key, final Person person) {
 		final Boolean result = this.setOperations.isMember(key, person);
 		return (result != null) && result;
 	}
 
+	/**
+	 * Returns the number of elements in a Redis set.
+	 * @param key the key referring to a Redis set
+	 * @return the number of elements in the specified
+	 * Redis set.
+	 */
 	public Long size(final String key) {
 		return this.setOperations.size(key);
 	}
 
+	/**
+	 * Computes the difference of two Redis sets and returns the
+	 * resulting set without storing it in Redis.
+	 * @param key the key referring to the first Redis set
+	 * @param otherKey the key referring to the second Redis set
+	 * @return a {@link Set} resulting from the difference of
+	 * the two Redis sets.
+	 */
 	public Set<Person> difference(final String key, final String otherKey) {
 		return this.setOperations.difference(key, otherKey);
 	}
 
+	/**
+	 * Performs an intersection of two Redis sets and returns the
+	 * resulting set without storing it in Redis.
+	 * @param key the key referring to the first Redis set
+	 * @param otherKey the key referring to the second Redis set
+	 * @return a {@link Set} resulting from the intersection of
+	 * the two Redis sets.
+	 */
 	public Set<Person> intersection(final String key, final String otherKey) {
 		return this.setOperations.intersect(key, otherKey);
 	}
