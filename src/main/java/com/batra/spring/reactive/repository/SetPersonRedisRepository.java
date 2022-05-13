@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 
+/**
+ * This repository class helps manipulate Redis sets of
+ * {@link Person} objects.
+ */
 @Repository
 public class SetPersonRedisRepository {
 
@@ -18,11 +22,29 @@ public class SetPersonRedisRepository {
 		this.setOperations = redisTemplate.opsForSet();
 	}
 
+	/**
+	 * Adds a {@link Person} object to a Redis set.
+	 * @param key the key pointing to a Redis set
+	 * @param person the {@link Person} object that
+	 *               needs to be added to the Redis set
+	 * @return <code>true</code> if the specified {@link Person}
+	 * object was added to the Redis set, <code>false</code>
+	 * otherwise.
+	 */
 	public boolean add(final String key, final Person person) {
 		final Long nItemsAdded = this.setOperations.add(key, person);
 		return (nItemsAdded != null) && (nItemsAdded > 0);
 	}
 
+	/**
+	 * Removes a {@link Person} object from a Redis set.
+	 * @param key the key pointing to the Redis set
+	 * @param person the {@link Person} object to be removed
+	 *               from the Redis set
+	 * @return <code>true</code> if the specified {@link Person}
+	 * object was removed from the Redis set, <code>false</code>
+	 * otherwise.
+	 */
 	public boolean remove(final String key, final Person person) {
 		final Long nItemsRemoved = this.setOperations.remove(key, person);
 		return (nItemsRemoved != null) && (nItemsRemoved > 0);
