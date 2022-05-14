@@ -156,6 +156,7 @@ public class SetPersonRedisServiceUnitTests {
 
 	@Test
 	public void testDifference() {
+
 		final Set<Person> other = Set.of(
 			new Person("Sumit Mohan", 35),
 			new Person("Unknown Guy", 25)
@@ -180,6 +181,7 @@ public class SetPersonRedisServiceUnitTests {
 
 	@Test
 	public void testIntersection() {
+
 		final Set<Person> other = Set.of(
 			new Person("Sumit Mohan", 35),
 			new Person("Unknown Guy", 25)
@@ -204,6 +206,7 @@ public class SetPersonRedisServiceUnitTests {
 
 	@Test
 	public void testUnion() {
+
 		final Set<Person> other = Set.of(
 			new Person("Sumit Mohan", 35),
 			new Person("Unknown Guy", 25)
@@ -228,6 +231,16 @@ public class SetPersonRedisServiceUnitTests {
 
 	@Test
 	public void testGetPeople() {
-		// TODO
+
+		final Set<Person> expectedSet = new HashSet<>(PERSON_SET);
+		final int expectedSize = expectedSet.size();
+
+		final Set<Person> actualSet = this.service.getPeople(REDIS_SET_KEY);
+		final int actualSize = actualSet.size();
+
+		assertAll(
+			() -> assertEquals(expectedSize, actualSize),
+			() -> assertEquals(expectedSet, actualSet)
+		);
 	}
 }
