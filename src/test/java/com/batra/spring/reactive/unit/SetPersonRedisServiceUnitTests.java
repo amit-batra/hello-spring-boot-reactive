@@ -51,26 +51,47 @@ public class SetPersonRedisServiceUnitTests {
 	}
 
 	@Test
-	public void testAdd() {
+	public void testAddSuccess() {
 
 		final Set<Person> beforeSet = this.service.getPeople(REDIS_SET_KEY);
 		final int beforeSize = beforeSet.size();
 
 		final Person person = new Person("Mohit Mohan", 55);
-		this.service.add(REDIS_SET_KEY, person);
+		final boolean isAddSuccess = this.service.add(REDIS_SET_KEY, person);
 
 		final Set<Person> afterSet = this.service.getPeople(REDIS_SET_KEY);
 		final int afterSize = afterSet.size();
 
 		assertAll(
 			() -> assertFalse(beforeSet.contains(person)),
+			() -> assertTrue(isAddSuccess),
 			() -> assertTrue(afterSet.contains(person)),
 			() -> assertEquals(beforeSize + 1, afterSize)
 		);
 	}
 
 	@Test
-	public void testRemove() {
+	public void testAddFailure() {
+		final Set<Person> beforeSet = this.service.getPeople(REDIS_SET_KEY);
+		final int beforeSize = beforeSet.size();
+
+		final Person person = beforeSet.iterator().next();
+		final boolean isAddSuccess = this.service.add(REDIS_SET_KEY, person);
+
+		final Set<Person> afterSet = this.service.getPeople(REDIS_SET_KEY);
+		final int afterSize = afterSet.size();
+
+		assertAll(
+			() -> assertTrue(beforeSet.contains(person)),
+			() -> assertFalse(isAddSuccess),
+			() -> assertTrue(afterSet.contains(person)),
+			() -> assertEquals(beforeSize, afterSize)
+		);
+	}
+
+	@Test
+	public void testRemoveSuccess() {
+
 		final Set<Person> beforeSet = this.service.getPeople(REDIS_SET_KEY);
 		final int beforeSize = beforeSet.size();
 
@@ -89,8 +110,39 @@ public class SetPersonRedisServiceUnitTests {
 	}
 
 	@Test
-	public void testIsMember() {
-		// TODO
+	public void testRemoveFailure() {
+
+		final Set<Person> beforeSet = this.service.getPeople(REDIS_SET_KEY);
+		final int beforeSize = beforeSet.size();
+
+		final Person person = new Person("Unknown Guy", 25);
+		final boolean isRemovalSuccess = this.service.remove(REDIS_SET_KEY, person);
+
+		final Set<Person> afterSet = this.service.getPeople(REDIS_SET_KEY);
+		final int afterSize = afterSet.size();
+
+		assertAll(
+			() -> assertFalse(beforeSet.contains(person)),
+			() -> assertFalse(isRemovalSuccess),
+			() -> assertFalse(afterSet.contains(person)),
+			() -> assertEquals(beforeSize, afterSize)
+		);
+	}
+
+	@Test
+	public void testIsMemberSuccess() {
+		final Person person = PERSON_SET.iterator().next();
+		final boolean isMemberSuccess = this.service.isMember(REDIS_SET_KEY, person);
+
+		assertTrue(isMemberSuccess);
+	}
+
+	@Test
+	public void testIsMemberFailure() {
+		final Person person = new Person("Unknown Guy", 25);
+		final boolean isMemberFailure = this.service.isMember(REDIS_SET_KEY, person);
+
+		assertFalse(isMemberFailure);
 	}
 
 	@Test
