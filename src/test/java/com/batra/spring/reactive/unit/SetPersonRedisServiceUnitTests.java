@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -147,22 +148,82 @@ public class SetPersonRedisServiceUnitTests {
 
 	@Test
 	public void testSize() {
-		// TODO
+		final long expectedSize = PERSON_SET.size();
+		final Long actualSize = this.service.size(REDIS_SET_KEY);
+
+		assertEquals(expectedSize, actualSize);
 	}
 
 	@Test
 	public void testDifference() {
-		// TODO
+		final Set<Person> other = Set.of(
+			new Person("Sumit Mohan", 35),
+			new Person("Unknown Guy", 25)
+		);
+		final Set<Person> expectedSet = new HashSet<>(PERSON_SET);
+		expectedSet.removeAll(other);
+		final int expectedSize = expectedSet.size();
+
+		final String otherKey = "otherSet";
+		other.forEach(person ->
+			this.service.add(otherKey, person)
+		);
+
+		final Set<Person> actualSet = this.service.difference(REDIS_SET_KEY, otherKey);
+		final int actualSize = actualSet.size();
+
+		assertAll(
+			() -> assertEquals(expectedSize, actualSize),
+			() -> assertEquals(expectedSet, actualSet)
+		);
 	}
 
 	@Test
 	public void testIntersection() {
-		// TODO
+		final Set<Person> other = Set.of(
+			new Person("Sumit Mohan", 35),
+			new Person("Unknown Guy", 25)
+		);
+		final Set<Person> expectedSet = new HashSet<>(PERSON_SET);
+		expectedSet.retainAll(other);
+		final int expectedSize = expectedSet.size();
+
+		final String otherKey = "otherSet";
+		other.forEach(person ->
+			this.service.add(otherKey, person)
+		);
+
+		final Set<Person> actualSet = this.service.intersection(REDIS_SET_KEY, otherKey);
+		final int actualSize = actualSet.size();
+
+		assertAll(
+			() -> assertEquals(expectedSize, actualSize),
+			() -> assertEquals(expectedSet, actualSet)
+		);
 	}
 
 	@Test
 	public void testUnion() {
-		// TODO
+		final Set<Person> other = Set.of(
+			new Person("Sumit Mohan", 35),
+			new Person("Unknown Guy", 25)
+		);
+		final Set<Person> expectedSet = new HashSet<>(PERSON_SET);
+		expectedSet.addAll(other);
+		final int expectedSize = expectedSet.size();
+
+		final String otherKey = "otherSet";
+		other.forEach(person ->
+			this.service.add(otherKey, person)
+		);
+
+		final Set<Person> actualSet = this.service.union(REDIS_SET_KEY, otherKey);
+		final int actualSize = actualSet.size();
+
+		assertAll(
+			() -> assertEquals(expectedSize, actualSize),
+			() -> assertEquals(expectedSet, actualSet)
+		);
 	}
 
 	@Test
