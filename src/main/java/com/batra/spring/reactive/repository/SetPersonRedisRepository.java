@@ -15,11 +15,13 @@ import java.util.Set;
 @Repository
 public class SetPersonRedisRepository {
 
+	private final RedisTemplate<String, Person> redisTemplate;
 	private final SetOperations<String, Person> setOperations;
 
 	@Autowired
 	public SetPersonRedisRepository(final RedisTemplate<String, Person> redisTemplate) {
-		this.setOperations = redisTemplate.opsForSet();
+		this.redisTemplate = redisTemplate;
+		this.setOperations = this.redisTemplate.opsForSet();
 	}
 
 	/**
@@ -118,5 +120,15 @@ public class SetPersonRedisRepository {
 	 */
 	public Set<Person> getPeople(final String key) {
 		return this.setOperations.members(key);
+	}
+
+	/**
+	 * Clears the Redis set referenced by the specified
+	 * Redis key.
+	 * @param key the key referring to the Redis set that
+	 *            needs to be cleared
+	 */
+	public void clear(String key) {
+		this.redisTemplate.delete(key);
 	}
 }

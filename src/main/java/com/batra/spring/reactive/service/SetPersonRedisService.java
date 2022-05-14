@@ -123,4 +123,14 @@ public class SetPersonRedisService {
 	public Set<Person> getPeople(String key) {
 		return this.repository.getPeople(key);
 	}
+
+	/**
+	 * Clears the Redis set referenced by the specified
+	 * Redis key.
+	 * @param key the key referring to the Redis set that
+	 *            needs to be cleared
+	 */
+	public void clear(final String key) {
+		this.repository.clear(key);
+	}
 }
