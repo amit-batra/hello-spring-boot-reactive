@@ -1,39 +1,27 @@
 package com.batra.spring.reactive.service;
 
-import com.batra.spring.reactive.repository.TransactionalPersonRedisRepository;
+import com.batra.spring.reactive.entity.Person;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
- * This service enables transactional behavior with Redis through
- * a {@link TransactionalPersonRedisRepository}.
+ * This service enables transactional behavior with Redis.
  */
 @Service
 public class TransactionalPersonRedisService {
 
-	private final TransactionalPersonRedisRepository repository;
+	private final RedisTemplate<String, Person> redisTemplate;
 
-	public TransactionalPersonRedisService(final TransactionalPersonRedisRepository repository) {
-		this.repository = repository;
+	@Autowired
+	public TransactionalPersonRedisService(final RedisTemplate<String, Person> redisTemplate) {
+		this.redisTemplate = redisTemplate;
 	}
 
-	/**
-	 * Begins a Redis transaction.
-	 */
-	public void beginTransaction() {
-		repository.beginTransaction();
-	}
-
-	/**
-	 * Commits a Redis transaction.
-	 */
-	public void commitTransaction() {
-		repository.commitTransaction();
-	}
-
-	/**
-	 * Rolls back a Redis transaction.
-	 */
-	public void rollbackTransaction() {
-		repository.rollbackTransaction();
+	public List<Object> executeInTransaction(final SessionCallback<List<Object>> session) {
+		return this.redisTemplate.execute(session);
 	}
 }
