@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -118,7 +119,56 @@ public class TransactionalPersonRedisServiceUnitTests {
 	}
 
 	@Test
-	public void testTransactionRollback() {
+	public void testTransactionRollbackWithAdd() {
 
+		final List<Person> beforeList = this.listService.getList(REDIS_LIST_KEY);
+		final int beforeSize = beforeList.size();
+
+		final Person person = new Person("Namit Mohan", 55);
+		final List<Object> results = this.transactionalService.executeInTransaction(new SessionCallback<>() {
+
+			public <K, V> List<Object> execute(RedisOperations<K, V> operations) throws DataAccessException {
+				operations.multi();
+				operations.opsForList().rightPush((K) REDIS_LIST_KEY, (V) person);
+				operations.discard();
+				return null;
+			}
+		});
+
+		final List<Person> afterList = this.listService.getList(REDIS_LIST_KEY);
+		final int afterSize = afterList.size();
+
+		assertAll(
+			() -> assertNull(results),
+			() -> assertEquals(beforeSize, afterSize),
+			() -> assertFalse(beforeList.contains(person)),
+			() -> assertFalse(afterList.contains(person))
+		);
+	}
+
+	@Test
+	public void testTransactionRollbackWithRemove() {
+
+		final List<Person> beforeList = this.listService.getList(REDIS_LIST_KEY);
+		final int beforeSize = beforeList.size();
+
+		List<Object> results = this.transactionalService.executeInTransaction(new SessionCallback<>() {
+
+			public <K, V> List<Object> execute(RedisOperations<K, V> operations) throws DataAccessException {
+				operations.multi();
+				operations.opsForList().leftPop((K) REDIS_LIST_KEY);
+				operations.discard();
+				return null;
+			}
+		});
+
+		final List<Person> afterList = this.listService.getList(REDIS_LIST_KEY);
+		final int afterSize = afterList.size();
+
+		assertAll(
+			() -> assertNull(results),
+			() -> assertEquals(beforeSize, afterSize),
+			() -> assertEquals(beforeList, afterList)
+		);
 	}
 }
